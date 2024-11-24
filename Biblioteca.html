@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identificação de Minerais</title>
+    <!-- Adicionando o link para o Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #ffffff;
+            color: #0061f2;
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid #0061f2;
+        }
+        header h1 {
+            font-size: 1.75rem;
+            margin: 0;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            padding: 20px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+        .filter-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .filter-container input {
+            padding: 10px 15px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            min-width: 180px;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+        .filter-container input:focus {
+            border-color: #0061f2;
+            outline: none;
+        }
+        .filter-container i {
+            position: absolute;
+            right: 10px;
+            color: #aaa;
+        }
+        .minerals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .mineral-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .mineral-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        .mineral-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #0061f2;
+            text-transform: uppercase;
+        }
+        .mineral-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+        .mineral-card p strong {
+            color: #0061f2;
+        }
+        footer {
+            background-color: #0061f2;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            border-top: 2px solid #ffffff;
+        }
+        footer p {
+            margin: 0;
+        }
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .filters input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GeoLab</h1>
+</header>
+
+<div class="filters">
+    <div class="filter-container">
+        <input type="text" id="filterNome" placeholder="Nome...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterBrilho" placeholder="Brilho...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterCor" placeholder="Cor...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterDureza" placeholder="Dureza...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterClivagem" placeholder="Clivagem...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterTraco" placeholder="Traço...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterMagnetismo" placeholder="Magnetismo...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterRadioatividade" placeholder="Radioatividade...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterFormula" placeholder="Fórmula Química...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterDensidade" placeholder="Densidade...">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-container">
+        <input type="text" id="filterHabito" placeholder="Hábito...">
+        <i class="fas fa-search"></i>
+    </div>
+</div>
+
+<div class="minerals-grid" id="mineralsGrid">
+    <!-- Mineral cards will be displayed here -->
+</div>
+
+<footer>
+    <p>&copy; 2024 Identificação de Minerais. Todos os direitos reservados.</p>
+</footer>
+
+<script>
+    const minerals = [
+    { "name": "Ametista", "brilho": "Vítreo", "cor": "Violeta", "dureza": 7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.65, "habito": "Prismático" },
+  { "name": "Quartzo", "brilho": "Vítreo", "cor": "Incolor", "dureza": 7, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.65, "habito": "Prismático" },
+  { "name": "Granada", "brilho": "Vítreo", "cor": "Vermelho", "dureza": 7.5, "clivagem": "Concoidal", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Fe3Al2(SiO4)3", "densidade": 4.1, "habito": "Dodecaédrico" },
+  { "name": "Calcita", "brilho": "Vítreo", "cor": "Incolor", "dureza": 3, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaCO3", "densidade": 2.71, "habito": "Romboédrico" },
+  { "name": "Olivina", "brilho": "Vítreo", "cor": "Verde", "dureza": 6.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "(Mg, Fe)2SiO4", "densidade": 3.3, "habito": "Prismático" },
+  { "name": "Pirita", "brilho": "Metálico", "cor": "Amarelo", "dureza": 6-6.5, "clivagem": "Não", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "FeS2", "densidade": 5.02, "habito": "Cúbico" },
+  { "name": "Hematita", "brilho": "Metálico", "cor": "Preto a Cinza", "dureza": 5.5-6.5, "clivagem": "Não", "traco": "Vermelho", "magnetismo": "Levemente magnética", "radioatividade": "Não", "formula": "Fe2O3", "densidade": 5.3, "habito": "Tabular" },
+  { "name": "Turmalina", "brilho": "Vítreo", "cor": "Verde", "dureza": 7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li, Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Topázio", "brilho": "Vítreo", "cor": "Amarelo", "dureza": 8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO4(F, OH)2", "densidade": 3.5, "habito": "Prismático" },
+  { "name": "Fluorita", "brilho": "Vítreo", "cor": "Varia entre verde, roxa, azul", "dureza": 4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaF2", "densidade": 3.18, "habito": "Cúbico" },
+  { "name": "Mica", "brilho": "Vítreo", "cor": "Incolor a Verde", "dureza": 2.5-4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "KAl2(AlSi3O10)(OH)2", "densidade": 2.8, "habito": "Laminar" },
+  { "name": "Magnesita", "brilho": "Vítreo", "cor": "Branco", "dureza": 3.5, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "MgCO3", "densidade": 3.0, "habito": "Romboédrico" },
+  { "name": "Barita", "brilho": "Vítreo", "cor": "Incolor a Branco", "dureza": 3-3.5, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "BaSO4", "densidade": 4.5, "habito": "Tabular" },
+  { "name": "Galena", "brilho": "Metálico", "cor": "Cinza a Preto", "dureza": 2.5, "clivagem": "Perfeita", "traco": "Cinza", "magnetismo": "Não", "radioatividade": "Não", "formula": "PbS", "densidade": 7.4, "habito": "Cúbico" },
+  { "name": "Azurita", "brilho": "Vítreo", "cor": "Azul", "dureza": 3.5-4, "clivagem": "Imperfecta", "traco": "Azul", "magnetismo": "Não", "radioatividade": "Não", "formula": "Cu3(CO3)2(OH)2", "densidade": 3.77, "habito": "Prismático" },
+  { "name": "Malachita", "brilho": "Sedoso", "cor": "Verde", "dureza": 3.5-4, "clivagem": "Não", "traco": "Verde claro", "magnetismo": "Não", "radioatividade": "Não", "formula": "Cu2CO3(OH)2", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Kyanita", "brilho": "Vítreo", "cor": "Azul", "dureza": 4.5-5, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5", "densidade": 3.65, "habito": "Prismático" },
+  { "name": "Serpentina", "brilho": "Sedoso", "cor": "Verde", "dureza": 3-5, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Mg3(Si2O5)(OH)4", "densidade": 2.5-2.6, "habito": "Fibroso" },
+  { "name": "Zircão", "brilho": "Vítreo", "cor": "Incolor a Amarelo", "dureza": 7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "ZrSiO4", "densidade": 4.7, "habito": "Tetraédrico" },
+  { "name": "Espinélio", "brilho": "Vítreo", "cor": "Vermelho, Azul", "dureza": 8, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "MgAl2O4", "densidade": 3.6, "habito": "Octaédrico" },
+  { "name": "Málm", "brilho": "Metálico", "cor": "Preto", "dureza": 5, "clivagem": "Não", "traco": "Preto", "magnetismo": "Levemente magnético", "radioatividade": "Não", "formula": "Fe3O4", "densidade": 5.2, "habito": "Massivo" },
+  { "name": "Sodalita", "brilho": "Vítreo", "cor": "Azul", "dureza": 5.5-6, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na8Al6Si6O24Cl2", "densidade": 2.2, "habito": "Cúbico" },
+  { "name": "Chrysoprase", "brilho": "Vítreo", "cor": "Verde", "dureza": 6-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.6, "habito": "Massivo" },
+  { "name": "Cianita", "brilho": "Vítreo", "cor": "Azul", "dureza": 4-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Gipsita", "brilho": "Perlido", "cor": "Incolor a Branco", "dureza": 2, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaSO4·2H2O", "densidade": 2.3, "habito": "Tabular" },
+  { "name": "Piritita", "brilho": "Metálico", "cor": "Amarelo", "dureza": 6-6.5, "clivagem": "Não", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "FeS2", "densidade": 5.0, "habito": "Cúbico" },
+  { "name": "Apatita", "brilho": "Vítreo", "cor": "Verde", "dureza": 5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Ca5(PO4)3(F, Cl, OH)", "densidade": 3.2, "habito": "Prismático" },
+  { "name": "Talc", "brilho": "Perlido", "cor": "Branco a Verde", "dureza": 1, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Mg3Si4O10(OH)2", "densidade": 2.8, "habito": "Folhoso" },
+  { "name": "Cuarzo", "brilho": "Vítreo", "cor": "Incolor a Amarelo", "dureza": 7, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.65, "habito": "Prismático" },
+  { "name": "Beryl", "brilho": "Vítreo", "cor": "Verde", "dureza": 7.5-8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Be3Al2(Si6O18)", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Rubi", "brilho": "Vítreo", "cor": "Vermelho", "dureza": 9, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2O3", "densidade": 4.0, "habito": "Prismático" },
+  { "name": "Esmeralda", "brilho": "Vítreo", "cor": "Verde", "dureza": 7.5-8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Be3Al2(Si6O18)", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Agata", "brilho": "Vítreo", "cor": "Multicolorida", "dureza": 6.5-7, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.6, "habito": "Massivo" },
+  { "name": "Kunzita", "brilho": "Vítreo", "cor": "Rosa", "dureza": 6, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "LiAl(Si2O6)", "densidade": 3.2, "habito": "Prismático" },
+  { "name": "Topázio Imperial", "brilho": "Vítreo", "cor": "Amarelo-alaranjado", "dureza": 8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO4(F, OH)2", "densidade": 3.5, "habito": "Prismático" },
+  { "name": "Turquesa", "brilho": "Semilustroso", "cor": "Azul", "dureza": 5-6, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CuAl6(PO4)4(OH)8·4H2O", "densidade": 2.6, "habito": "Massivo" },
+  { "name": "Almandina", "brilho": "Vítreo", "cor": "Vermelho", "dureza": 7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Fe3Al2(SiO4)3", "densidade": 4.1, "habito": "Dodecaédrico" },
+  { "name": "Prehnita", "brilho": "Vítreo", "cor": "Verde", "dureza": 6, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Ca2Al(AlSi3O10)(OH)2", "densidade": 2.9, "habito": "Prismático" },
+  { "name": "Fluorita", "brilho": "Vítreo", "cor": "Violeta a Verde", "dureza": 4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaF2", "densidade": 3.2, "habito": "Cúbico" },
+  { "name": "Monazita", "brilho": "Vítreo", "cor": "Amarelo a Marrom", "dureza": 5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Sim", "formula": "CePO4", "densidade": 5.2, "habito": "Prismático" },
+  { "name": "Bauxite", "brilho": "Sedoso", "cor": "Marrom a Vermelho", "dureza": 1-3, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2O3·nH2O", "densidade": 2.5, "habito": "Massivo" },
+  { "name": "Mica", "brilho": "Vítreo", "cor": "Incolor a Verde", "dureza": 2-3, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "KAl2(AlSi3O10)(OH)2", "densidade": 2.8, "habito": "Folhoso" },
+  { "name": "Kyanita", "brilho": "Vítreo", "cor": "Azul", "dureza": 4-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Sphalerite", "brilho": "Vítreo", "cor": "Amarelo a Marrom", "dureza": 3.5-4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "ZnS", "densidade": 3.9, "habito": "Dodecaédrico" },
+  { "name": "Chalkopyrita", "brilho": "Metálico", "cor": "Amarelo a Verde", "dureza": 3.5-4, "clivagem": "Não", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "CuFeS2", "densidade": 4.2, "habito": "Massivo" },
+  { "name": "Wolframita", "brilho": "Metálico", "cor": "Preto", "dureza": 7, "clivagem": "Imperfecta", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "FeWO4", "densidade": 7.5, "habito": "Prismático" },
+  { "name": "Vanadita", "brilho": "Resinoso", "cor": "Amarelo a Laranja", "dureza": 3, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Pb5(VO4)3Cl", "densidade": 6.8, "habito": "Prismático" },
+  { "name": "Pyromorfita", "brilho": "Resinoso", "cor": "Verde a Amarelo", "dureza": 3, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Pb5(PO4)3Cl", "densidade": 6.8, "habito": "Prismático" },
+  { "name": "Olivina", "brilho": "Vítreo", "cor": "Verde", "dureza": 6.5-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "(Mg, Fe)2SiO4", "densidade": 3.3, "habito": "Prismático" },
+  { "name": "Magnetita", "brilho": "Metálico", "cor": "Preto", "dureza": 6, "clivagem": "Não", "traco": "Preto", "magnetismo": "Forte", "radioatividade": "Não", "formula": "Fe3O4", "densidade": 5.2, "habito": "Octaédrico" },
+  { "name": "Azurita", "brilho": "Vítreo", "cor": "Azul", "dureza": 3.5-4, "clivagem": "Imperfecta", "traco": "Azul", "magnetismo": "Não", "radioatividade": "Não", "formula": "Cu3(CO3)2(OH)2", "densidade": 3.8, "habito": "Tabular" },
+  { "name": "Scheelita", "brilho": "Vítreo", "cor": "Branco a Amarelo", "dureza": 4.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaWO4", "densidade": 6.1, "habito": "Prismático" },
+  { "name": "Zoisita", "brilho": "Vítreo", "cor": "Verde a Marrom", "dureza": 6-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Ca2Al3(SiO4)3(OH)", "densidade": 3.4, "habito": "Prismático" },
+  { "name": "Beryl", "brilho": "Vítreo", "cor": "Verde a Azul", "dureza": 7.5-8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Be3Al2Si6O18", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Serpentina", "brilho": "Sedoso", "cor": "Verde", "dureza": 3-5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Mg3Si2O5(OH)4", "densidade": 2.5, "habito": "Massivo" },
+  { "name": "Labradorita", "brilho": "Vítreo", "cor": "Cinza a Azul", "dureza": 6-6.5, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "(Na,Ca)Al(Al,Si)Si2O8", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Obsidiana", "brilho": "Vítreo", "cor": "Preto", "dureza": 5, "clivagem": "Não", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2", "densidade": 2.6, "habito": "Amorfos" },
+  { "name": "Topázio", "brilho": "Vítreo", "cor": "Amarelo a Azul", "dureza": 8, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO4(F,OH)2", "densidade": 3.5, "habito": "Prismático" },
+  { "name": "Calcopirita", "brilho": "Metálico", "cor": "Amarelo a Verde", "dureza": 3.5-4, "clivagem": "Não", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "CuFeS2", "densidade": 4.1, "habito": "Massivo" },
+  { "name": "Cianita", "brilho": "Vítreo", "cor": "Azul", "dureza": 4-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Espodumênio", "brilho": "Vítreo", "cor": "Verde a Rosa", "dureza": 6.5-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "LiAlSi2O6", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Turquesa", "brilho": "Cera", "cor": "Azul a Verde", "dureza": 5-6, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CuAl6(PO4)4(OH)8·4H2O", "densidade": 2.6, "habito": "Compacto" },
+  { "name": "Sodalita", "brilho": "Vítreo", "cor": "Azul", "dureza": 5.5-6, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na8Al6Si6O24Cl2", "densidade": 2.3, "habito": "Cúbico" },
+  { "name": "Hidroxiapatita", "brilho": "Vítreo", "cor": "Incolor a Branco", "dureza": 5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Ca5(PO4)3OH", "densidade": 3.1, "habito": "Prismático" },
+  { "name": "Rutilo", "brilho": "Metálico", "cor": "Amarelo a Vermelho", "dureza": 6-6.5, "clivagem": "Imperfecta", "traco": "Amarelo", "magnetismo": "Não", "radioatividade": "Não", "formula": "TiO2", "densidade": 4.2, "habito": "Prismático" },
+  { "name": "Garnet", "brilho": "Vítreo", "cor": "Vermelho", "dureza": 6.5-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "A3B2(SiO4)3", "densidade": 4.1, "habito": "Dodecaédrico" },
+  { "name": "Aragonita", "brilho": "Vítreo", "cor": "Branco a Amarelo", "dureza": 3.5-4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaCO3", "densidade": 2.9, "habito": "Prismático" },
+  { "name": "Dolomita", "brilho": "Vítreo", "cor": "Branco a Rosa", "dureza": 3.5-4, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaMg(CO3)2", "densidade": 2.8, "habito": "Romboédrico" },
+  { "name": "Peridoto", "brilho": "Vítreo", "cor": "Verde", "dureza": 6.5-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "(Mg,Fe)2SiO4", "densidade": 3.3, "habito": "Prismático" },
+  { "name": "Talc", "brilho": "Perolado", "cor": "Branco a Verde", "dureza": 1, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Mg3Si4O10(OH)2", "densidade": 2.8, "habito": "Folhoso" },
+  { "name": "Crisoberilo", "brilho": "Vítreo", "cor": "Amarelo a Verde", "dureza": 8.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "BeAl2O4", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Manganita", "brilho": "Metálico", "cor": "Preto", "dureza": 4-5, "clivagem": "Imperfecta", "traco": "Preto", "magnetismo": "Não", "radioatividade": "Não", "formula": "MnO2", "densidade": 4.8, "habito": "Prismático" },
+  { "name": "Smithsonita", "brilho": "Vítreo", "cor": "Azul a Verde", "dureza": 4, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "ZnCO3", "densidade": 4.4, "habito": "Massivo" },
+  { "name": "Petalite", "brilho": "Vítreo", "cor": "Branco", "dureza": 6.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "LiAlSi4O10", "densidade": 2.4, "habito": "Prismático" },
+  { "name": "Peridoto", "brilho": "Vítreo", "cor": "Verde", "dureza": 6.5-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "(Mg,Fe)2SiO4", "densidade": 3.3, "habito": "Prismático" },
+  { "name": "Clinocloro", "brilho": "Perolado", "cor": "Verde", "dureza": 2.5-3, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Mg3(Al,Fe)2(Si3Al)O10(OH)2", "densidade": 3.3, "habito": "Folhoso" },
+  { "name": "Crisoprase", "brilho": "Vítreo", "cor": "Verde", "dureza": 6-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "SiO2 + Ni", "densidade": 2.6, "habito": "Massivo" },
+  { "name": "Gipsita", "brilho": "Perolado", "cor": "Branco a Amarelo", "dureza": 2, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "CaSO4·2H2O", "densidade": 2.3, "habito": "Folhoso" },
+  { "name": "Hessonita", "brilho": "Vítreo", "cor": "Laranja a Vermelho", "dureza": 6.5-7, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Ca3Al2(SiO4)3", "densidade": 3.7, "habito": "Dodecaédrico" },
+  { "name": "Iolita", "brilho": "Vítreo", "cor": "Azul a Roxo", "dureza": 7-7.5, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5(OH)", "densidade": 2.7, "habito": "Prismático" },
+  { "name": "Jadeíta", "brilho": "Vítreo", "cor": "Verde", "dureza": 6.5-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Al,Fe)Si2O6", "densidade": 3.4, "habito": "Prismático" },
+  { "name": "Kyanita", "brilho": "Vítreo", "cor": "Azul", "dureza": 4-7, "clivagem": "Perfeita", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Al2SiO5", "densidade": 3.6, "habito": "Prismático" },
+  { "name": "Turmalina Elbaíta", "brilho": "Vítreo", "cor": "Verde a Azul", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Rubelita", "brilho": "Vítreo", "cor": "Rosa a Vermelho", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Paraíba", "brilho": "Vítreo", "cor": "Azul a Verde", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Indicolita", "brilho": "Vítreo", "cor": "Azul a Verde", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Black", "brilho": "Vítreo", "cor": "Preto", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Verde", "brilho": "Vítreo", "cor": "Verde", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Amarela", "brilho": "Vítreo", "cor": "Amarelo", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Rosa", "brilho": "Vítreo", "cor": "Rosa", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Aquamarine", "brilho": "Vítreo", "cor": "Azul claro", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+  { "name": "Turmalina Melancia", "brilho": "Vítreo", "cor": "Verde no exterior e Rosa no interior", "dureza": 7-7.5, "clivagem": "Imperfecta", "traco": "Branco", "magnetismo": "Não", "radioatividade": "Não", "formula": "Na(Li,Al)3Al6(BO3)3Si6O18(OH)4", "densidade": 3.06, "habito": "Prismático" },
+   
+
+
+
+];
+
+    function displayMinerals(filteredMinerals) {
+        const grid = document.getElementById("mineralsGrid");
+        grid.innerHTML = "";
+        filteredMinerals.forEach(mineral => {
+            const card = document.createElement("div");
+            card.classList.add("mineral-card");
+            card.innerHTML = `
+                <h3>${mineral.name}</h3>
+                <p><strong>Brilho:</strong> ${mineral.brilho}</p>
+                <p><strong>Cor:</strong> ${mineral.cor}</p>
+                <p><strong>Dureza:</strong> ${mineral.dureza}</p>
+                <p><strong>Clivagem:</strong> ${mineral.clivagem}</p>
+                <p><strong>Traço:</strong> ${mineral.traco}</p>
+                <p><strong>Magnetismo:</strong> ${mineral.magnetismo}</p>
+                <p><strong>Radioatividade:</strong> ${mineral.radioatividade}</p>
+                <p><strong>Fórmula:</strong> ${mineral.formula}</p>
+                <p><strong>Densidade:</strong> ${mineral.densidade}</p>
+                <p><strong>Hábito:</strong> ${mineral.habito}</p>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filterMinerals() {
+        const filters = {
+            nome: document.getElementById("filterNome").value.toLowerCase(),
+            brilho: document.getElementById("filterBrilho").value.toLowerCase(),
+            cor: document.getElementById("filterCor").value.toLowerCase(),
+            dureza: document.getElementById("filterDureza").value.toLowerCase(),
+            clivagem: document.getElementById("filterClivagem").value.toLowerCase(),
+            traco: document.getElementById("filterTraco").value.toLowerCase(),
+            magnetismo: document.getElementById("filterMagnetismo").value.toLowerCase(),
+            radioatividade: document.getElementById("filterRadioatividade").value.toLowerCase(),
+            formula: document.getElementById("filterFormula").value.toLowerCase(),
+            densidade: document.getElementById("filterDensidade").value.toLowerCase(),
+            habito: document.getElementById("filterHabito").value.toLowerCase()
+        };
+
+        const filteredMinerals = minerals.filter(mineral => {
+            return (
+                mineral.name.toLowerCase().includes(filters.nome) &&
+                mineral.brilho.toLowerCase().includes(filters.brilho) &&
+                mineral.cor.toLowerCase().includes(filters.cor) &&
+                mineral.dureza.toString().includes(filters.dureza) &&
+                mineral.clivagem.toLowerCase().includes(filters.clivagem) &&
+                mineral.traco.toLowerCase().includes(filters.traco) &&
+                mineral.magnetismo.toLowerCase().includes(filters.magnetismo) &&
+                mineral.radioatividade.toLowerCase().includes(filters.radioatividade) &&
+                mineral.formula.toLowerCase().includes(filters.formula) &&
+                mineral.densidade.toString().includes(filters.densidade) &&
+                mineral.habito.toLowerCase().includes(filters.habito)
+            );
+        });
+
+        displayMinerals(filteredMinerals);
+    }
+
+    // Adicionando eventos de digitação para cada campo de filtro
+    document.querySelectorAll(".filter-container input").forEach(input => {
+        input.addEventListener("input", filterMinerals);
+    });
+
+    // Exibindo todos os minerais no início
+    displayMinerals(minerals);
+</script>
+
+</body>
+</html>
